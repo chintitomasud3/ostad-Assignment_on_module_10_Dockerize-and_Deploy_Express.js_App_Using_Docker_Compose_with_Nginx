@@ -79,8 +79,11 @@ services:
 
   app:
     image: chintitomasud/module3-express-app:latest
-    # build: .          # You can use this instead of image if you want to build locally
+    # build: .         
     restart: unless-stopped
 ```
-
+## Docker Compose run
+```
+sudo docker compose up -d --build
+```
 

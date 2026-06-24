@@ -32,3 +32,55 @@ ENV PORT=5000
 # Start the app
 CMD ["npm", "start"]
 ```
+# 2  Create a docker-compose.yml 
+##  nginx Configuration File 
+```mkdir -p nginx
+```
+### Create file nginx/nginx.conf
+```
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream node_backend {
+        server app:5000;
+    }
+
+    server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+            proxy_pass http://node_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+```
+
+## Create docker-compose.yml
+```
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  app:
+    image: chintitomasud/module3-express-app:latest
+    # build: .          # You can use this instead of image if you want to build locally
+    restart: unless-stopped
+```
+
+

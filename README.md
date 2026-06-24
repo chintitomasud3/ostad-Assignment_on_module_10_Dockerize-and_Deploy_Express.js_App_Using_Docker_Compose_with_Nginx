@@ -87,3 +87,7 @@ services:
 sudo docker compose up -d --build
 ```
 
+## Verify the browser 
+```
+Open browser: http://localhost:8080
+```
